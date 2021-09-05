@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+
+#Laravel App
+  app:
+    image: "laravel:${TAG}"
+    container_name: app
+    build:
+      context: ./php
+    ports:
+        - "${PORT}:80"
+    volumes:
+      - ./laravel:/var/www/html
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+
+networks:
+  mynetwork:
+    driver: bridge
