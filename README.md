@@ -7,9 +7,11 @@
 
 ## Instrucciones
 
-- Dentro de la carpeta `src` importar el proyecto a usar, el proyecto ya debe estar compilado
+> Nota: si la carpeta `laravel` no existe, crearla
+
+- Dentro de la carpeta `laravel` importar el proyecto a usar, el proyecto ya debe estar compilado
 - Dentro del archivo `.env`, cambiar la variable `TAG` por la versión de la imagen y `PORT` para el puerto que desea usar, ejemplo: `TAG=PROD`, el nombre de la imagen será: `laravel:PROD`
-- Dentro de la carpeta `src` crear el archivo `.env` correspondiente a las variables usadas por laravel, allí  debe ir toda la informacion de credenciales
+- Dentro de la carpeta `laravel` crear el archivo `.env` correspondiente a las variables usadas por laravel, allí  debe ir toda la informacion de credenciales
 
 ## Instalación
 
@@ -31,14 +33,29 @@ Dentro del contenedor
 
 ```sh
 composer install
+```
+
+```sh
 composer dump-autoload
+```
+
+```sh
 php artisan key:generate
+```
+
+```sh
 php artisan storage:link
+```
+
+```sh
 php artisan config:cache
+```
+
+```sh
 php artisan cache:clear
 ```
 
-> Nota: si el proyecto es ejecuta en producción, usar la url configurada en el archivo `src/.env` seguido del puerto usado en el archivo `.env`
+> Nota: si el proyecto es ejecuta en producción, usar la url configurada en el archivo `laravel/.env` seguido del puerto usado en el archivo `.env`
 
 Verificar el despliegue en su navegador
 
