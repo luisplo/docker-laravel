@@ -1,64 +1,66 @@
-# Usando Docker con Laravel
+# Instalación de Laravel con Docker
 
-## Detalles
+## Requisitos:
 
-- PHP 8
-- Composer last version
+- **Docker** en su version mas reciente
+- Base de datos **MySql 8.0**
 
-## Instrucciones
-
-> Nota: si la carpeta `laravel` no existe, crearla
-
-- Dentro de la carpeta `laravel` importar el proyecto a usar, el proyecto ya debe estar compilado
-- Dentro del archivo `.env`, cambiar la variable `TAG` por la versión de la imagen y `PORT` para el puerto que desea usar, ejemplo: `TAG=PROD`, el nombre de la imagen será: `laravel:PROD`
-- Dentro de la carpeta `laravel` crear el archivo `.env` correspondiente a las variables usadas por laravel, allí  debe ir toda la informacion de credenciales
+## Pre-Instalación
+- Dentro del archivo `.env` se encuentran dos variables a personalizar:
+    - Variable para definir el tag del contenedor `TAG=PROD`
+    - Variable para definir el puerto a usar `PORT=8000`
+- Importar proyecto
+    - Dentro de la carpeta `src` importar todos los archivos del proyecto
+    - Modificar el archivo `src/.env`, ejemplo:
+        - Nombre del proyecto: `APP_NAME=Laravel`
+        - URL del proyecto: `APP_URL=www.google.com`
+        - Mostrar errores (en producción, dejar en **false**): `APP_DEBUG=false`
+        - Host de la base de datos: `DB_HOST=192.169.100.168`
+        - Puerto de escucha de la base de datos: `DB_PORT=3306`
+        - Nombre de la base de datos: `DB_DATABASE=laravel`
+        - Usuario de la base de datos: `DB_USERNAME=root`
+        - Contraseña de la base de datos: `DB_PASSWORD=123456`
+> Nota: si el archivo no existe, copiar la información de `src/.env.example`
 
 ## Instalación
 
-Los comandos a continuación son para inicializar los contenedores
-
+Construir la imagen del Proyecto
 ```sh
-docker-compose up -d
+$ docker-compose build
 ```
-
-Inicializados los contenedores, continuar con la configuración del proyecto **Laravel**, el siguiente comando nos permite entrar al contenedor
-
+Iniciar los contenedores
 ```sh
-docker-compose exec app /bin/bash
+$ docker-compose up -d
 ```
+> Nota: si el archivo no existe, copiar la información de `.env.example`
 
-> Nota: si no se cuenta con un proyecto, usar `composer create-project laravel/laravel .` 
 
-Dentro del contenedor
-
+Instalar composer
 ```sh
-composer install
+$ docker-compose exec app composer install --ignore-platform-reqs
 ```
-
+Generar key
 ```sh
-composer dump-autoload
+$ docker-compose exec app php artisan key:generate
 ```
-
+Generar Link para storage
 ```sh
-php artisan key:generate
+$ docker-compose exec app php artisan storage:link
 ```
-
+Configuración adicional
 ```sh
-php artisan storage:link
+$ docker-compose exec app php artisan config:clear
+$ docker-compose exec app php artisan cache:clear
+$ docker-compose exec app php artisan view:clear
+$ docker-compose exec app php artisan config:cache
 ```
-
+> Nota: En caso de algun error, es por falta de permisos, ejecutar:
+    `
+    $ docker-compose exec app chown -R www-data: /var/www/html
+    `
+    
+Ejecutar migración de la base de datos
 ```sh
-php artisan config:cache
+$ docker-compose exec app php artisan migrate:fresh --seed
 ```
-
-```sh
-php artisan cache:clear
-```
-
-> Nota: si el proyecto es ejecuta en producción, usar la url configurada en el archivo `laravel/.env` seguido del puerto usado en el archivo `.env`
-
-Verificar el despliegue en su navegador
-
-```sh
-127.0.0.1:8000
-```
+> Nota: En caso de requerir modificar credenciales dentro del archivo `src/.env`, solo se debe ejecutar, luego de aplicado los cambios, los comando contenidos en **Configuración adicional**
