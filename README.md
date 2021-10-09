@@ -34,7 +34,6 @@ $ docker-compose up -d
 ```
 > Nota: si el archivo no existe, copiar la información de `.env.example`
 
-
 Instalar composer
 ```sh
 $ docker-compose exec app composer install --ignore-platform-reqs
@@ -54,10 +53,19 @@ $ docker-compose exec app php artisan cache:clear
 $ docker-compose exec app php artisan view:clear
 $ docker-compose exec app php artisan config:cache
 ```
-> Nota: En caso de algun error, es por falta de permisos, ejecutar:
-    `
-    $ docker-compose exec app chown -R www-data: /var/www/html
-    `
+> Nota: El propósito de estos comandos es limpiar cache
+
+Instalar Node JS y compilar el proyecto a producción
+```sh
+$ docker-compose exec app npm install
+$ docker-compose exec app npm run prod
+```
+> Nota: La versión de Node JS, es la versión LTS actual a la fecha de instalación
+
+Dar permisos, **Fundamental**
+```sh
+$ docker-compose exec app chown -R www-data: /var/www/html
+```
     
 Ejecutar migración de la base de datos
 ```sh
